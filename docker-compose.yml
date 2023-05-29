@@ -8,7 +8,7 @@ services:
     image: seanly/test:jenkins-2.375.4-jdk11-1
     restart: unless-stopped
     ports:
-      - 30080:8080
+      - 8080:8080
       - 50000:50000
     environment:
       JAVA_OPTS: >-
