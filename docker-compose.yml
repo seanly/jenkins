@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    image: seanly/test:jenkins-2.375.4-jdk11-1
+    image: seanly/jenkins:2.375.4-jdk11-base
     restart: unless-stopped
     ports:
       - 8080:8080
