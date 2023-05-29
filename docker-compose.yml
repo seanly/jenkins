@@ -1,0 +1,38 @@
+version: '3'
+services:
+  jenkins-master:
+    container_name: jenkins
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: seanly/test:jenkins-2.375.4-jdk11-1
+    restart: unless-stopped
+    ports:
+      - 30080:8080
+      - 50000:50000
+    environment:
+      JAVA_OPTS: >-
+        -server
+        -Xmx2g -Xms1g
+        -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8
+        -Djenkins.install.runSetupWizard=false
+        -Dhudson.model.LoadStatistics.clock=2000
+        -Dorg.apache.commons.jelly.tags.fmt.timeZone=Asia/Shanghai
+        -Duser.timezone=Asia/Shanghai
+        -Dcom.sun.jndi.ldap.connect.pool.timeout=300000
+        -Dhudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID=true
+  jenkins-agent:
+    image: seanly/jenkins-agent:inbound
+    restart: unless-stopped
+    privileged: true
+    depends_on:
+      - jenkins-master
+    links:
+      - jenkins-master
+    environment:
+      JENKINS_URL: http://jenkins-master:8080
+      JENKINS_USR: admin
+      JENKINS_PSW: jenkins
+      LABELS: docker
+      AGENT_SERVICE: swarm-client
+      CLEANUP_PERIODIC: daily
