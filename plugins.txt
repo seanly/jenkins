@@ -140,4 +140,3 @@ branch-api
 workflow-api
 jersey2-api
 pubsub-light
-cloudbees-disk-usage-simple
