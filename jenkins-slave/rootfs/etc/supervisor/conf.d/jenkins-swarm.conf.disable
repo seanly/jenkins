@@ -1,0 +1,36 @@
+[program:jenkins-slave]
+# environment = KEY1="value1",KEY2="value2"
+; 用哪个用户启动
+user = root
+; 程序的启动目录
+# directory = /data/docker
+; 启动命令
+command = /usr/local/bin/jenkins-swarm-client.sh
+
+; stdout 日志文件，需要注意当指定目录不存在时无法正常启动，所以需要手动创建目录（supervisord 会自动创建日志文件）
+stdout_logfile = /var/log/jenkins-swarm-client-stdout.log
+stderr_logfile = /var/log/jenkins-swarm-client-stderr.log
+
+; 在 supervisord 启动的时候也自动启动
+autostart = true
+; 启动 5 秒后没有异常退出，就当作已经正常启动了
+startsecs = 10
+; 程序异常退出后自动重启
+autorestart = true
+; 启动失败自动重试次数，默认是 3
+startretries = 3
+; 把 stderr 重定向到 stdout，默认 false
+redirect_stderr = true
+; stdout 日志文件大小，默认 50MB
+stdout_logfile_maxbytes = 20MB
+; stdout 日志文件备份数
+stdout_logfile_backups = 20
+
+; stderr 日志文件大小，默认 50MB
+stderr_logfile_maxbytes = 20MB
+; stderr 日志文件备份数
+stderr_logfile_backups = 20
+
+; 同时关闭子孙进程，适用于 shell 脚本启动的程序
+stopasgroup=true
+killasgroup=true

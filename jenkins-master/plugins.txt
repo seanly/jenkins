@@ -141,3 +141,4 @@ workflow-api
 jersey2-api
 pubsub-light
 oes-template
+configuration-as-code

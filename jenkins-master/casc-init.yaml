@@ -1,0 +1,24 @@
+# https://www.jenkins.io/doc/book/managing/casc/
+jenkins:
+  mode: EXCLUSIVE
+  numExecutors: 0
+  scmCheckoutRetryCount: 2
+  disableRememberMe: true
+  systemMessage: "Jenkins for Opsbox Dev"
+
+  crumbIssuer:
+    standard:
+      excludeClientIPFromCrumb: true
+
+  agentProtocols:
+    - "JNLP4-connect"
+    - "Ping"
+
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "admin"
+          password: "jenkins"
+
+  authorizationStrategy: "loggedInUsersCanDoAnything"

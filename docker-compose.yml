@@ -3,7 +3,7 @@ services:
   jenkins-master:
     container_name: jenkins
     build:
-      context: .
+      context: ./jenkins-master
       dockerfile: ./Dockerfile
     image: seanly/jenkins:2.375.4-jdk11-base
     restart: unless-stopped
@@ -21,8 +21,11 @@ services:
         -Duser.timezone=Asia/Shanghai
         -Dcom.sun.jndi.ldap.connect.pool.timeout=300000
         -Dhudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID=true
-  jenkins-agent:
-    image: seanly/jenkins-agent:inbound
+  jenkins-slave:
+    build:
+      context: ./jenkins-slave
+      dockerfile: ./Dockerfile
+    image: seanly/jenkins:slave-jdk11-dind
     restart: unless-stopped
     privileged: true
     depends_on:
@@ -34,5 +37,5 @@ services:
       JENKINS_USR: admin
       JENKINS_PSW: jenkins
       LABELS: docker
-      AGENT_SERVICE: swarm-client
+      SLAVE_SERVICE: swarm
       CLEANUP_PERIODIC: daily

@@ -1,0 +1,12 @@
+{
+    "max-concurrent-downloads": 3,
+    "max-concurrent-uploads": 3,
+    "bip": "10.44.1.1/16",
+    "storage-driver": "overlay2",
+    "log-driver": "json-file",
+    "log-opts": {
+      "max-size": "1g",
+      "max-file": "3"
+    }
+  }
+    
