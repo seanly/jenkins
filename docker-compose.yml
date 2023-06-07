@@ -3,7 +3,7 @@ services:
   jenkins-master:
     container_name: jenkins
     build:
-      context: ./jenkins-master
+      context: ./master
       dockerfile: ./Dockerfile
     image: seanly/jenkins:2.375.4-jdk11-base
     restart: unless-stopped
@@ -23,7 +23,7 @@ services:
         -Dhudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID=true
   jenkins-slave:
     build:
-      context: ./jenkins-slave
+      context: ./slave
       dockerfile: ./Dockerfile
     image: seanly/jenkins:slave-jdk11-dind
     restart: unless-stopped

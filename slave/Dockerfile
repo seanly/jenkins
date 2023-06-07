@@ -6,10 +6,14 @@ LABEL name="jenkins slave" \
 
 ENV JENKINS_HOME /home/jenkins
 
-# kubernetes tools
-COPY --from=seanly/toolset:helm /usr/bin/helm /usr/bin/helm
-COPY --from=seanly/toolset:kustomize /usr/bin/kustomize /usr/bin/kustomize
-COPY --from=seanly/toolset:kubectl /usr/bin/kubectl /usr/bin/kubectl
+# tools
+COPY --from=seanly/opsbox:toolset \
+        /usr/bin/yq \
+        /usr/bin/docker-compose \
+        /usr/bin/helm \
+        /usr/bin/kustomize \
+        /usr/bin/kubectl \
+    /usr/bin/
 
 # docker
 COPY --from=seanly/toolset:docker /install/docker/usr/bin/* /usr/bin/
