@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: jenkins-master
+  name: jenkins-master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins-master
+  serviceName: jenkins-master
+  template:
+    metadata:
+      labels:
+        app: jenkins-master
+    spec:
+      containers:
+      - env:
+        - name: JAVA_OPTS
+          value: >-
+            -server  
+            -XX:+UnlockExperimentalVMOptions  -XX:+UseContainerSupport   
+            -XX:MaxRAMPercentage=50.0
+            -XX:InitialRAMPercentage=50.0  
+            -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8
+            -Djenkins.install.runSetupWizard=false  
+            -Dhudson.model.LoadStatistics.clock=2000
+            -Dorg.apache.commons.jelly.tags.fmt.timeZone=Asia/Shanghai 
+            -Duser.timezone=Asia/Shanghai
+            -Dcom.sun.jndi.ldap.connect.pool.timeout=300000 
+            -Dhudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID=true  
+            -XX:+UnlockExperimentalVMOptions
+            -XX:+UseZGC 
+            -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=5005,suspend=n
+        - name: JENKINS_HOME
+          value: /var/jenkins_home
+        image: seanly/jenkins:2.375.4-jdk11-base
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /login
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: jenkins-master
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 50000
+          name: slave
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /login
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: "2"
+            memory: 4Gi
+          requests:
+            cpu: "1"
+            memory: 2Gi
+        volumeMounts:
+        - mountPath: /jenkins_home
+          name: jenkins-home
+          subPath: jenkins_home
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: jenkins-home
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 20Gi
+      storageClassName: local-volume
+      volumeMode: Filesystem
