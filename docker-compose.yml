@@ -11,6 +11,7 @@ services:
       - 8080:8080
       - 50000:50000
     environment:
+      CASC_JENKINS_CONFIG: /var/jenkins_home/casc.d/
       JAVA_OPTS: >-
         -server
         -Xmx2g -Xms1g
@@ -21,6 +22,9 @@ services:
         -Duser.timezone=Asia/Shanghai
         -Dcom.sun.jndi.ldap.connect.pool.timeout=300000
         -Dhudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID=true
+    volumes:
+      - jenkins-data:/var/jenkins_home:rw
+      - ./master/casc.d:/var/jenkins_home/casc.d/:ro
   jenkins-slave:
     build:
       context: ./slave
@@ -39,3 +43,6 @@ services:
       LABELS: docker
       SLAVE_SERVICE: swarm
       CLEANUP_PERIODIC: daily
+
+volumes:
+    jenkins-data:
