@@ -125,7 +125,6 @@ htmlpublisher
 ssh-slaves
 blueocean
 handy-uri-templates-2-api
-ansicolor
 cors-filter
 cloudbees-bitbucket-branch-source
 git-parameter
@@ -142,3 +141,5 @@ jersey2-api
 pubsub-light
 oes-template
 configuration-as-code
+categorized-view
+collapsing-console-sections

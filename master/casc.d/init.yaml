@@ -22,3 +22,12 @@ jenkins:
           password: "jenkins"
 
   authorizationStrategy: "loggedInUsersCanDoAnything"
+
+unclassified:
+  collapsingSectionNote:
+    sections:
+    - collapseOnlyOneLevel: true
+      collapseSection: true
+      sectionDisplayName: "stage: {1}"
+      sectionEndPattern: "\\[Pipeline\\] // stage"
+      sectionStartPattern: "\\[Pipeline\\] \\{ (.*)"
