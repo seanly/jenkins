@@ -9,18 +9,18 @@ function start_sv {
 }
 
 function clean_data {
-    # clean workspace files
-    mkdir -p /home/jenkins/empty
+  # clean workspace files
+  mkdir -p /home/jenkins/empty
 	if [ -d /home/jenkins/workspace ]; then
 	  rsync -av --delete /home/jenkins/empty/ /home/jenkins/workspace/
 	fi
 
 	if [ -d /home/jenkins/agent/workspace ]; then
-      rsync -av --delete /home/jenkins/empty/ /home/jenkins/agent/workspace
+    rsync -av --delete /home/jenkins/empty/ /home/jenkins/agent/workspace
 	fi
     
-    # clean images
-    docker system prune -af
+  # clean images
+  docker system prune -af
 }
 
 SLAVE_PID=$(supervisorctl pid jenkins-slave)
@@ -41,8 +41,8 @@ echo "no job run, start clean data..."
 
 stop_sv
 
-if [ -f /clean-data/hook.sh ]; then
-  bash /clean-data/hook.sh
+if [ -f /hooks/clean-data.sh ]; then
+  bash /hooks/clean-data.sh
 else 
   clean_data
 fi
