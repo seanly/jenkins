@@ -40,5 +40,10 @@ fi
 echo "no job run, start clean data..."
 
 stop_sv
-clean_data
+
+if [ -f /clean-data/hook.sh ]; then
+  bash /clean-data/hook.sh
+else 
+  clean_data
+fi
 start_sv
