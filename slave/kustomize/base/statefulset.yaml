@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: swarm-slave
+  name: swarm-slave
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: swarm-slave
+  serviceName: default
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: swarm-slave
+    spec:
+      containers:
+      - env:
+        - name: JENKINS_URL
+          value: http://jenkins-master:8080/
+        - name: JENKINS_USR
+          value: admin
+        - name: JENKINS_PSW
+          value: jenkins
+        - name: LABELS
+          value: java-dind
+        - name: DOCKER_VERSION
+          value: 20.10.9
+        - name: SLAVE_SERVICE
+          value: swarm-client
+        image: seanly/jenkins:slave-jdk11-dind
+        imagePullPolicy: Always
+        name: swarm-slave
+        resources:
+          limits:
+            cpu: "4"
+            memory: 8Gi
+          requests:
+            cpu: "1"
+            memory: 2Gi
+        securityContext:
+          privileged: true
+        stdin: true
+        tty: true
