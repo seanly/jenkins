@@ -45,3 +45,9 @@ spec:
           privileged: true
         stdin: true
         tty: true
+        volumeMounts:
+        - mountPath: /var/lib/docker
+          name: data
+      volumes:
+      - emptyDir: {}
+        name: data
