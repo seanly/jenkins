@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.375.4-jdk11
+FROM jenkins/jenkins:2.414.3-jdk11
 
 LABEL name="jenkins master" \
       vender="opsbox.dev"
