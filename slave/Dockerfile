@@ -1,5 +1,8 @@
 # vim: set ft=dockerfile:
-FROM eclipse-temurin:8u372-b07-jdk-centos7
+FROM eclipse-temurin:8u372-b07-jdk-centos7 as jdk8
+FROM eclipse-temurin:11.0.16_8-jdk-centos7 as jdk11
+
+FROM rockylinux:8
 
 LABEL name="jenkins slave" \
       vender="opsbox.dev"
@@ -27,8 +30,9 @@ ARG SLAVE_VERSION=4.14
 ARG SWARM_VERSION=3.39
 
 RUN set -eux \
-  && yum install -y epel-release \
-  && yum install -y btrfs-progs e2fsprogs e2fsprogs-extra iptables xfsprogs xz pigz \
+  && dnf update -y \
+  && dnf install -y epel-release \
+  && dnf install -y iptables  xz pigz \
     git subversion rsync bzip2 sudo supervisor cronie \
   && groupadd -r dockremap \
   && useradd -r -g dockremap dockremap \
@@ -43,12 +47,17 @@ RUN set -eux \
   && chmod 644 /usr/share/jenkins/swarm-client.jar \
   && curl --create-dirs -sSLo /usr/share/jenkins/slave.jar \
     https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${SLAVE_VERSION}/remoting-${SLAVE_VERSION}.jar \
-  && chmod 644 /usr/share/jenkins/slave.jar  
+  && chmod 644 /usr/share/jenkins/slave.jar
 
-COPY --from=eclipse-temurin:11.0.16_8-jdk-centos7 /opt/java/openjdk /usr/local/java11
+COPY --from=jdk8 /opt/java/openjdk /opt/java/openjdk
+COPY --from=jdk11 /opt/java/openjdk /usr/local/java11
+
+ENV JAVA_HOME=/opt/java/openjdk
+ENV PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 ARG SLAVE_JAVA_EXEC=/usr/local/java11/bin/java
 ENV SLAVE_JAVA_EXEC=${SLAVE_JAVA_EXEC}
+ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8     
 
 COPY ./rootfs /
 

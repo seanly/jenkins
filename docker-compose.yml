@@ -29,7 +29,7 @@ services:
     build:
       context: ./slave
       dockerfile: ./Dockerfile
-    image: seanly/jenkins:slave-jdk11-dind
+    image: seanly/jenkins:slave-jdk11-dind-rocky8
     restart: unless-stopped
     privileged: true
     depends_on:
