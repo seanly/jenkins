@@ -21,7 +21,10 @@ jenkins:
         - id: "admin"
           password: "jenkins"
 
-  authorizationStrategy: "loggedInUsersCanDoAnything"
+  authorizationStrategy: 
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+      
 
 unclassified:
   collapsingSectionNote:
