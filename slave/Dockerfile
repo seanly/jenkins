@@ -29,7 +29,7 @@ ARG SWARM_VERSION=3.39
 
 RUN set -eux \
   && apk update \
-  && apk add iptables  xz pigz curl ca-certificates bash openjdk11\
+  && apk add iptables xz pigz curl ca-certificates bash openjdk11 \
     openssh git subversion rsync bzip2 sudo supervisor cronie net-tools procps-ng mtr iproute2\
   && addgroup -S dockremap \
   && adduser -S -G dockremap dockremap \

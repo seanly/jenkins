@@ -9,7 +9,7 @@ ENV TZ=Asia/Shanghai
 RUN apt update && \
     apt install -y --no-install-recommends neovim net-tools \
         iputils-ping telnet zip unzip wget tzdata curl ca-certificates fontconfig locales \
-        xz-utils git subversion rsync bzip2 sudo supervisor cron && \
+        xz-utils git subversion rsync bzip2 sudo supervisor cron iproute2 openssh-client && \
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 
 USER jenkins
