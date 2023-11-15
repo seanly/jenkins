@@ -33,7 +33,7 @@ RUN set -eux \
   && dnf update -y \
   && dnf install -y epel-release \
   && dnf install -y iptables  xz pigz \
-    git subversion rsync bzip2 sudo supervisor cronie \
+    git subversion rsync bzip2 sudo supervisor cronie net-tools procps-ng mtr iproute\
   && groupadd -r dockremap \
   && useradd -r -g dockremap dockremap \
   && echo 'dockremap:165536:65536' >> /etc/subuid \
