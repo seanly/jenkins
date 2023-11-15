@@ -25,6 +25,5 @@ fi
 AGENT_NAME="-name ${HOSTNAME}"
 APP_OPTS="-executors 1 -fsroot /home/jenkins -workDir /home/jenkins ${AGENT_NAME} ${APP_OPTS}"
 
-_java_exec=${SLAVE_JAVA_EXEC:-/opt/java/openjdk/bin/java}
 #It is fine it blows up for now since it should lead to an error anyway.
-exec ${_java_exec} $JAVA_OPTS -jar /usr/share/jenkins/swarm-client.jar ${URL} ${APP_OPTS} "$@"
+exec java $JAVA_OPTS -jar /usr/share/jenkins/swarm-client.jar ${URL} ${APP_OPTS} "$@"

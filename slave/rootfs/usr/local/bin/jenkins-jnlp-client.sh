@@ -46,7 +46,5 @@ if [ -n "$JENKINS_AGENT_NAME" ]; then
   fi
 fi
 
-
-_java_exec=${SLAVE_JAVA_EXEC:-/opt/java/openjdk/bin/java}
 #It is fine it blows up for now since it should lead to an error anyway.
-exec ${_java_exec} $JAVA_OPTS $JNLP_PROTOCOL_OPTS -cp /usr/share/jenkins/slave.jar hudson.remoting.jnlp.Main -headless $TUNNEL $URL $OPT_JENKINS_SECRET $OPT_JENKINS_AGENT_NAME "$@"
+exec java $JAVA_OPTS $JNLP_PROTOCOL_OPTS -cp /usr/share/jenkins/slave.jar hudson.remoting.jnlp.Main -headless $TUNNEL $URL $OPT_JENKINS_SECRET $OPT_JENKINS_AGENT_NAME "$@"
