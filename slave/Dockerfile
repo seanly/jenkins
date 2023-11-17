@@ -1,6 +1,6 @@
 # vim: set ft=dockerfile:
 
-FROM alpine:3.18
+FROM docker:24.0.7-dind-alpine3.18
 
 LABEL name="jenkins slave" \
       vender="opsbox.dev"
@@ -10,16 +10,17 @@ ENV JENKINS_HOME /home/jenkins
 # tools
 COPY --from=seanly/opsbox:toolset \
         /usr/bin/yq \
-        /usr/bin/docker-compose \
         /usr/bin/helm \
         /usr/bin/kustomize \
         /usr/bin/kubectl \
     /usr/bin/
-
+COPY --from=seanly/toolset:envsubst \
+        /usr/bin/envsubst \
+    /usr/bin/
 # docker
-COPY --from=seanly/toolset:docker /install/docker/usr/bin/* /usr/bin/
-COPY --from=seanly/toolset:docker /root/.docker /root/.docker
-COPY --from=seanly/toolset:dapper /usr/bin/dapper /usr/bin/dapper
+COPY --from=seanly/toolset:dapper \
+        /usr/bin/dapper \
+    /usr/bin/
 
 ENV DOCKER_CLI_EXPERIMENTAL=enabled
 ENV DOCKER_BUILDKIT=1
@@ -29,14 +30,10 @@ ARG SWARM_VERSION=3.39
 
 RUN set -eux \
   && apk update \
-  && apk add iptables xz pigz curl ca-certificates bash openjdk11 \
-    openssh git subversion rsync bzip2 sudo supervisor cronie net-tools procps-ng mtr iproute2\
-  && addgroup -S dockremap \
-  && adduser -S -G dockremap dockremap \
-  && echo 'dockremap:165536:65536' >> /etc/subuid \
-  && echo 'dockremap:165536:65536' >> /etc/subgid \
-  && addgroup -S docker \
-  && adduser -S -G docker docker \
+  && apk add iptables xz pigz curl ca-certificates bash  \
+    openssh git subversion rsync bzip2 sudo \
+    net-tools procps-ng mtr iproute2 \
+    openjdk11 supervisor cronie \
   && mkdir -p /usr/share/jenkins \
   && chmod 755 /usr/share/jenkins \
   && curl --create-dirs -sSLo /usr/share/jenkins/swarm-client.jar \
@@ -50,6 +47,4 @@ ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 
 COPY ./rootfs /
 
-VOLUME /var/lib/docker
-EXPOSE 2375 2376
 ENTRYPOINT ["/entrypoint.sh"]
