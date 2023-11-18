@@ -22,8 +22,14 @@ if [ -n "$LABELS" ]; then
   APP_OPTS="-labels $LABELS ${APP_OPTS}"
 fi
 
+if [ -n "$EXECUTORS" ]; then
+  APP_OPTS="-executors ${EXECUTORS} ${APP_OPTS}"
+else
+  APP_OPTS="-executors 2 ${APP_OPTS}"
+fi
+
 AGENT_NAME="-name ${HOSTNAME}"
-APP_OPTS="-executors 1 -fsroot /home/jenkins -workDir /home/jenkins ${AGENT_NAME} ${APP_OPTS}"
+APP_OPTS="-fsroot /home/jenkins -workDir /home/jenkins ${AGENT_NAME} ${APP_OPTS}"
 
 #It is fine it blows up for now since it should lead to an error anyway.
 exec java $JAVA_OPTS -jar /usr/share/jenkins/swarm-client.jar ${URL} ${APP_OPTS} "$@"
