@@ -113,3 +113,4 @@ jersey2-api
 matrix-project
 metrics
 workflow-support
+keycloak
